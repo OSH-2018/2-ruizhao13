@@ -3,12 +3,16 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <stdlib.h>
 
 int main() {
     /* 输入的命令行 */
     char cmd[256];
     /* 命令行拆解成的各部分，以空指针结尾 */
     char *args[128];
+    char name[128];
+    char value[128];
+    /*change env var*/
     while (1) {
         /* 提示符 */
         printf("# ");
@@ -45,6 +49,20 @@ int main() {
             puts(getcwd(wd, 4096));
             continue;
         }
+        if(strcmp(args[0], "export") == 0) {
+
+            for(i = 0; args[1][i] != '='; i++) {
+                name[i] = args[1][i];
+            }
+            int k;
+            for(k = 0, i++; args[1][i]; i++, k++){
+                value[k] = args[1][i];
+            }
+
+            setenv(name, value,1);
+
+        }
+
         if (strcmp(args[0], "exit") == 0)
             return 0;
 
